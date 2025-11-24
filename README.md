@@ -47,8 +47,9 @@ This script relies on several external tools. Please ensure they are installed a
   * **[trufflehog](https://github.com/trufflesecurity/trufflehog)**: Used for secret scanning.
   * **[anew](https://github.com/tomnomnom/anew)**: Used for appending unique lines to output files.
   * **[get-dependencies](https://www.npmjs.com/package/get-dependencies)**: An NPM package to parse `package.json` files. Install via `$ npm i -g get-dependencies`.
-  * **[pip-name](https://github.com/danishprakash/pip-name)**: Use to chech pypi package name availability.Install via `$ pip install pip-name`
-    
+  * **[pip-name](https://github.com/danishprakash/pip-name)**: Use to check pypi package name availability.Install via `$ pip install pip-name`
+   * **[pip-name](https://www.npmjs.com/package/npm-name-cli)**: Use to check npm package name availability.Install via `$ npm i -g npm-name-cli `
+   *  
 ## ⚙️ Configuration
 
 You must export a **GitHub Token** with sufficient permissions (`repo`, `read:org`) for `ghorg` and `trufflehog` to function correctly.
