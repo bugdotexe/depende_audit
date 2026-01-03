@@ -1,0 +1,13 @@
+azure/azure-sdk-for-net 
+azure/azure-sdk-for-python 
+azure/azure-sdk-for-js 
+azure/azure-sdk-for-java
+azure/azure-sdk-for-go
+azure/azure-sdk-for-rust 
+azure/azure-sdk-tools 
+microsoft/fluentui
+PowerShell/PowerShell
+microsoft/typescript
+microsoft/agent-framework
+microsoft/monaco-editor
+microsoft/msquic
