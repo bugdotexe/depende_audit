@@ -1,4 +1,4 @@
-async function extractAllPackages(scope) {
+async function eA(scope) {
     let page = 0; // Start at 0, will increment
     let allPackages = [];
     let seen = new Set();
@@ -59,4 +59,4 @@ async function extractAllPackages(scope) {
 }
 
 // RUN IT
-extractAllPackages('airbnb');
+eA('airbnb');
