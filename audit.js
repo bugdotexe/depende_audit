@@ -226,9 +226,7 @@ async function main() {
             if (item.version) console.log(`    ↳ Target Version: ${item.version}`);
             if (item.source) console.log(`    ↳ Detection Method: ${item.source}`);
             vulnerable.push(item);
-        } else {
-            process.stdout.write('.');
-        }
+        } 
     }
 
     if (vulnerable.length > 0) {
