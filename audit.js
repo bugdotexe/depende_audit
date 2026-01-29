@@ -23,7 +23,7 @@ const isValidNpm = (name) => {
     if (!name || typeof name !== 'string' || name.length > 214) return false;
     const n = name.trim();
     if (NODE_BUILTINS.has(n) || n.startsWith('node:')) return false;
-    if (n.startsWith('.') || n.startsWith('/') || n.includes('.js') || n.includes('.css')) return false;
+    if (n.startsWith('.') || n.startsWith('/') || n.startsWith('-') || n.startsWith('git') || n.startsWith('npm:') || n.includes('.js') || n.includes('.css')) return false;
     if (!/^(?:@[a-z0-9-]+\/)?[a-z0-9-._]+$/.test(n)) return false;
     
     // Noise Filter for minified vars
