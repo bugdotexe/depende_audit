@@ -37,11 +37,11 @@ const isValidNpm = (name) => {
 // 2. SCANNING ENGINES
 // ==========================================
 
-// [NEW] Greedy Federation Engine (Matches .f("pkg","ver") patterns)
+// [NEW] Greedy Federation Engine (Matches ("pkg","ver") patterns)
 function scanGreedyFederation(content) {
     const deps = [];
     // Pattern 1: Webpack Federation Shared Scope
-    const federationRegex = /\.f\("([^"]+)","([^"]+)"/g;
+    const federationRegex =/[a-zA-Z]\("([^"]+)","([^"]+)"/g;
     let match;
     while ((match = federationRegex.exec(content)) !== null) {
         if (isValidNpm(match[1])) {
