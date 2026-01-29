@@ -24,7 +24,7 @@ const isValidNpm = (name) => {
     const n = name.trim();
     if (NODE_BUILTINS.has(n) || n.startsWith('node:')) return false;
     if (n.startsWith('.') || n.startsWith('/') || n.includes('.js') || n.includes('.css')) return false;
-    if (!/^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-*~][a-z0-9-*._~]*$/.test(n)) return false;
+    if (!/^(?:@[a-z0-9-]+\/)?[a-z0-9-._]+$/.test(n)) return false;
     
     // Noise Filter for minified vars
     const noise = new Set(['webpack', 'react', 'src', 'dist', 'app', 'undefined', 'null', 'window', 'document', 'default', 'prototype', 'anonymous', 'main', 'test']);
@@ -37,25 +37,61 @@ const isValidNpm = (name) => {
 // 2. SCANNING ENGINES
 // ==========================================
 
-// [NEW] Greedy Federation Engine (Matches .f("pkg","ver") patterns)
+
+
 function scanGreedyFederation(content) {
-    const deps = [];
-    // Pattern 1: Webpack Federation Shared Scope
-    const federationRegex = /[a-z]\("([^"]+)","([^"]+)"/g;
+    const deps = new Set(); // Changed to Set to auto-deduplicate
+    
+    // Pattern 1: Shared Modules (Explicit Versioning)
+    // Matches: f("package-name", "1.2.3")
+    const sharedRegex = /\b[a-zA-Z0-9_.]+\s*\(\s*["']([^"']+)["']\s*,\s*["']([^"']+)["']/g;
+    
     let match;
-    while ((match = federationRegex.exec(content)) !== null) {
-        if (isValidNpm(match[1])) {
-            deps.push({ name: match[1], version: match[2], type: 'npm', source: 'federation-shared' });
+    while ((match = sharedRegex.exec(content)) !== null) {
+        const pkgName = match[1];
+        const version = match[2];
+
+        // [STRICT VERSION FILTER]
+        // 1. Must start with digit, ^, or ~
+        if (!/^[0-9^~]/.test(version)) continue;
+        
+        // 2. Reject simple integers (0, 1, 4) often used for boolean/enums
+        // Real packages are "1.0.0" or "^1.2", not "1"
+        if (/^\d+$/.test(version)) continue;
+
+        // 3. Reject "~0" (Common bitwise artifact)
+        if (version === '~0') continue;
+
+        // 4. Must contain a dot (Standard SemVer) unless it's a very specific range
+        // This kills almost all CSS false positives
+        if (!version.includes('.')) continue;
+
+        if (isValidNpm(pkgName)) {
+            // Use a string key for Set deduplication
+            deps.add(JSON.stringify({ 
+                name: pkgName, 
+                version: version, 
+                type: 'npm', 
+                source: 'federation-shared' 
+            }));
         }
     }
-    // Pattern 2: Webpack Consumption (l("default","pkg"))
-    const consumeRegex = /[a-z]\("default","([^"]+)",\s*!?[01]/g;
+
+    // Pattern 2: Consumption (Default Import)
+    const consumeRegex = /["']default["']\s*,\s*["'](@?[a-z0-9-./]+)["']/gi;
+    
     while ((match = consumeRegex.exec(content)) !== null) {
         if (isValidNpm(match[1])) {
-            deps.push({ name: match[1], type: 'npm', source: 'federation-consume' });
+            deps.add(JSON.stringify({ 
+                name: match[1], 
+                type: 'npm', 
+                source: 'federation-consume' 
+            }));
         }
     }
-    return deps;
+    
+    // Parse objects back from Set
+    return Array.from(deps).map(item => JSON.parse(item));
 }
 
 // Add this function to your scanning engines
