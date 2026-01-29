@@ -41,7 +41,7 @@ const isValidNpm = (name) => {
 function scanGreedyFederation(content) {
     const deps = [];
     // Pattern 1: Webpack Federation Shared Scope
-    const federationRegex = /\.f\("([^"]+)","([^"]+)"/g;
+    const federationRegex = /[a-z]\("([^"]+)","([^"]+)"/g;
     let match;
     while ((match = federationRegex.exec(content)) !== null) {
         if (isValidNpm(match[1])) {
@@ -49,7 +49,7 @@ function scanGreedyFederation(content) {
         }
     }
     // Pattern 2: Webpack Consumption (l("default","pkg"))
-    const consumeRegex = /[a-zA-Z]\("default","([^"]+)",\s*!?[01]/g;
+    const consumeRegex = /[a-z]\("default","([^"]+)",\s*!?[01]/g;
     while ((match = consumeRegex.exec(content)) !== null) {
         if (isValidNpm(match[1])) {
             deps.push({ name: match[1], type: 'npm', source: 'federation-consume' });
