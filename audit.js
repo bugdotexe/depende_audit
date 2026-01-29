@@ -58,6 +58,19 @@ function scanGreedyFederation(content) {
     return deps;
 }
 
+// Add this function to your scanning engines
+function scanWebpackComments(content) {
+    const deps = new Set();
+    // Regex to find "node_modules/package-name" in comments
+    const regex = /node_modules\/(@[\w-]+\/[\w-]+|[\w-]+)/g; 
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+        if (isValidNpm(match[1])) {
+            deps.add(match[1]);
+        }
+    }
+    return Array.from(deps).map(name => ({ name, type: 'npm', source: 'webpack-comment' }));
+}
 // [RESTORED] AST Engine (Parses Import/Require)
 function scanJsAst(code) {
     const deps = new Set();
