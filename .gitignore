@@ -1,0 +1,5 @@
+facebook
+wordlist/allDNS.txt
+oauth*
+.env
+*-scanner/venv

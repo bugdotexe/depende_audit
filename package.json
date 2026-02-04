@@ -1,0 +1,18 @@
+{
+  "name": "depende_audit",
+  "version": "1.0.0",
+  "description": "Enterprise dependency audit + supply chain scanner",
+  "main": "audit.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["bug bounty", "dependency confusion", "supply chain"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/parser": "^7.29.0",
+    "@babel/traverse": "^7.29.0",
+    "fast-glob": "^3.3.2",
+    "source-map": "^0.7.6"
+  }
+}

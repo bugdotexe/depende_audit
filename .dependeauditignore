@@ -1,0 +1,5 @@
+# Add repo-specific ignore patterns here (one per line)
+# Examples:
+# **/test_resources/**
+# **/fixtures/**
+# **/examples/**
